@@ -1,0 +1,10 @@
+Package: GeneNets
+Type: Package
+Title: Network Analysis based on GWAS summary statistics
+Version: 0.0.1
+Author: Jackson Thorp, Andrew Grotzinger
+Description: Later
+License: GPL-3.0
+Encoding: UTF-8
+LazyData: true
+Imports: lavaan,tidyverse,qgraph,reshape2
