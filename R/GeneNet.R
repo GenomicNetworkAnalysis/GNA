@@ -37,7 +37,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100){
   colnames(p_rg)<-c("Trait1","op","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
 
   if(is.numeric(simruns)){
-  powerNet<-.simNet(covstruc,simruns)
+  powerNet<-.simNet(covstruc,simruns,trait_pairs)
   p_rg$power<-powerNet
   }
   
