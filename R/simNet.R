@@ -54,7 +54,7 @@
     p_rg_sim[i,"Trait2"] <- y[2]
   }
   
-  p_rg_sim$pvalue<-2*pnorm(abs(p_rg_sim$Pcor_Estimate/p_rg_sim$Pcor_SE),lower.tail=FALSE) 
+  p_rg_sim$Pcor_pvalue<-2*pnorm(abs(p_rg_sim$Pcor_Estimate/p_rg_sim$Pcor_SE),lower.tail=FALSE) 
   
   #save the trait pairs as a consistent first three columns across runs
   if(r == 1){
@@ -76,3 +76,4 @@
   return(powerNet)
   
 }
+ 
