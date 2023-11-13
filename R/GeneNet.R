@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL){
+GeneNet <- function(covstruc,traits=NULL,simruns=100){
   
   time<-proc.time()
   
@@ -35,7 +35,12 @@ GeneNet <- function(covstruc,traits=NULL){
   p_rg<-data.frame(p_rg)
   
   colnames(p_rg)<-c("Trait1","op","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
- 
+
+  if(is.numeric(simruns)){
+  powerNet<-.simNet(covstruc,simruns)
+  p_rg$power<-powerNet
+  }
+  
   time_all<-proc.time()-time
   print(time_all[3])
   
