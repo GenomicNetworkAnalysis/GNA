@@ -1,4 +1,4 @@
-.simNet<-function(covstruc,simruns){
+.simNet<-function(covstruc,simruns,trait_pairs){
   
   print("Beginning estimation of simulated partial correlations to produce power estimates for each edge weight.
         This step may take up to a few hours depending on the number of included traits.")
@@ -13,13 +13,13 @@
   simresults<-as.data.frame(matrix(ncol=simruns,nrow=(((k*(k+1))/2)-k)))
   
   #estimate partial correlations for each simnulation
-  for(i in 1:simruns){
+  for(r in 1:simruns){
   
   #create empty matrix to store simulated results 
   simS<-matrix(0, ncol(covstruc$S_LD), ncol(covstruc$S_LD))
   
   #store vector for one simulation run in lower triangle
-  simS[lower.tri(simS,diag=TRUE)] <-as.numeric(vectorS[i,])
+  simS[lower.tri(simS,diag=TRUE)] <-as.numeric(vectorS[r,])
   
   #reflect values above the diagonal
   simS <- simS + t(simS) - diag(diag(simS)) 
@@ -35,18 +35,36 @@
   #pair simulated S matrix with observed V
   sim_covstruc<-list(V_LD=covstruc$V_LD,S_LD=simS)
   
+  traits<-colnames(covstruc$S_LD)
+  
   #estimate the partial correlations (network weights) for simulation
-  invisible(capture.output(simNetwork<-GeneNet(sim_covstruc)))
+  p_rg_sim <- data.frame()
+  for (i in 1:nrow(trait_pairs)){
+    y <- trait_pairs[i,]
+    x <- traits[!traits %in% y]
+    model <- paste0(paste0(y, collapse = "+"), "~", paste0(x, collapse = "+"),"
+                    F1=~",y[1],"
+                    F2=~",y[2],"
+                    F1~~F2
+                    ",y[1],"~~0*",y[1],"
+                    ",y[2],"~~0*",y[2])
+    output_sim <- .pcor(sim_covstruc, model)
+    p_rg_sim <- rbind(p_rg_sim,output_sim)
+    p_rg_sim[i,"Trait1"] <- y[1]
+    p_rg_sim[i,"Trait2"] <- y[2]
+  }
+  
+  p_rg_sim$pvalue<-2*pnorm(abs(p_rg_sim$Pcor_Estimate/p_rg_sim$Pcor_SE),lower.tail=FALSE) 
   
   #save the trait pairs as a consistent first three columns across runs
-  if(i == 1){
-    rownames(simresults)<-paste0(simresults$Trait1,simresults$op,simresults$Trait2,sep="")
+  if(r == 1){
+    rownames(p_rg_sim)<-paste0(p_rg_sim$Trait1, p_rg_sim$op,p_rg_sim$Trait2,sep="")
   }
   
   #store p-value for each partial correlation for given simulation 
-  simresults[,i]<-simNetwork$Pcor_pvalue
+  simresults[,r]<-p_rg_sim$Pcor_pvalue
    
-  print(paste0("Estimated Simulation ", i, sep = " "))
+  print(paste0("Estimated Simulation ", r, sep = " "))
   }
   
   # Set a bonferroni threshold for p-values
