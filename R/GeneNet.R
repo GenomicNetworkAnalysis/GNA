@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,simruns=100){
+GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring"){
   
   time<-proc.time()
   
@@ -47,7 +47,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100){
   }
 
   #estimate network
-  network <- .runNet(p_rg,traits,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring")
+  network <- .runNet(p_rg,traits,prune,alpha,threshold,graph_layout)
 
   
   output <- c(list(p_rg), network)
