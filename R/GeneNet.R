@@ -36,6 +36,11 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100){
   
   colnames(p_rg)<-c("Trait1","op","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
 
+  #calculate Bayes Factor for each partial rg
+  BayesF <- .BayesF(covstruc,p_rg,traits)
+  p_rg <- merge(p_rg, BayesF, by = c("Trait1","Trait2")
+
+  #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
   powerNet<-.simNet(covstruc,simruns,trait_pairs)
   p_rg$power<-powerNet
