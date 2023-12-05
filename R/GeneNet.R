@@ -45,9 +45,15 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100){
   powerNet<-.simNet(covstruc,simruns,trait_pairs)
   p_rg$power<-powerNet
   }
+
+  #estimate network
+  network <- .runNet(p_rg,traits,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring")
+
+  
+  output <- c(list(p_rg), network)
   
   time_all<-proc.time()-time
   print(time_all[3])
   
-  return(p_rg)
+  return(output)
 }
