@@ -51,6 +51,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
 
   
   output <- c(list(p_rg), network)
+  names(output) <- c("partial_rgs","weights","graph","centrality")
   
   time_all<-proc.time()-time
   print(time_all[3])
