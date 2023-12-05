@@ -37,9 +37,10 @@
     BF10 <- jzs_bayes(r2_0, r2_1, p0, p1, n)
     
     out_bf10 <- rbind(out_bf10, c(y,x,r2_0,r2_1,BF10))
-    colnames(out_bf10) <- c("Trait1","Trait2","R2_mod0","R2_mod1","BayesFactor10")
-    out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")] <- apply(out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")], 2, as.numeric)
     }
+  
+  colnames(out_bf10) <- c("Trait1","Trait2","R2_mod0","R2_mod1","BayesFactor10")
+  out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")] <- apply(out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")], 2, as.numeric)
   
   return(out_bf10)
 }
