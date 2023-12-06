@@ -45,8 +45,9 @@
   results<-data.frame(inspect(Model1_Results, "list")[,c(2:4,8,14)])
   results<-subset(results, results$free != 0)                    
   results$free<-NULL
+  results$op<-NULL
   results$SE<-SE
-  colnames(results)=c("Trait1","op","Trait2","Pcor_Estimate", "Pcor_SE")
+  colnames(results)=c("Trait1","Trait2","Pcor_Estimate", "Pcor_SE")
    
   results<-results[results$Trait1 == "F1" & results$Trait2 == "F2",]
   
