@@ -34,7 +34,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
   rownames(p_rg)<-NULL
   p_rg<-data.frame(p_rg)
   
-  colnames(p_rg)<-c("Trait1","op","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
+  colnames(p_rg)<-c("Trait1","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
 
   #calculate Bayes Factor for each partial rg
   BF10 <- .BayesF(covstruc,p_rg,traits)
