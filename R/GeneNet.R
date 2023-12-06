@@ -4,7 +4,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
   
   #use all traits in S matrix if nothing specified
   if(is.null(traits)){
-    traits<-colnames(covstruc$S_LD)
+    traits<-colnames(covstruc[[2]])
   }
   
   #restrict to variables listed in traits and smooth matrix
