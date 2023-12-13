@@ -8,8 +8,13 @@
       return(ifelse(g == 0, 0, f))
     }
     
-    bf10 <- integrate(int,lower=0,upper=Inf,r2=r2_1,p=p1,n=n)$value / integrate(int,lower=0,upper=Inf,r2=r2_0,p=p0,n=n)$value
+     #try catch so that if function returns non-finitive value it returns NA
+      tryCatch({
+   bf10 <- integrate(int,lower=0,upper=Inf,r2=r2_1,p=p1,n=n)$value / integrate(int,lower=0,upper=Inf,r2=r2_0,p=p0,n=n)$value
     return(bf10)
+    }, error = function(e) {
+      return(NA)
+    })
 }
 
   # apply function across all partial rgs
