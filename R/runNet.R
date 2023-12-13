@@ -4,25 +4,36 @@
   p_rg$weight <- p_rg$Pcor_Estimate
   
   if(prune == "bayes"){
+    if(bayes){
+      if(anyNA(p_rg$BayesFactor10)){
+        warning("Bayes factor estimation produced non-finite values. Consider using a different pruning method")
+        }
     p_rg$weight[p_rg$BayesFactor10 < threshold] <- 0
+      }else{print("You have specified pruning using bayes estimation but did not request bayes factors to be estimated.")
+           }
   }
+  
   if(prune == "bonf"){
     p_rg$weight[p_rg$Pcor_pvalue >= (0.05/nrow(p_rg))] <- 0
   }
+  
   if(prune == "fdr"){
     p_rg$p_fdr <- p.adjust(p_rg$Pcor_pvalue, method='fdr')
     p_rg$weight[p_rg$p_fdr >= 0.05] <- 0
   }
+  
   if(prune == "alpha"){
     p_rg$weight[p_rg$Pcor_pvalue >= alpha] <- 0
   }
+  
   if(prune == "none"){
     p_rg$weight <- p_rg$weight
+    print("You have selected not to prune the edges in your network. Please ensure this is correct.")
   }
   
   
   # create weights matrix
-  val <- as.matrix(dcast(p_rg, Trait1 ~ Trait2, value.var = "weight"))
+  val <- as.matrix(reshape2::dcast(p_rg, Trait1 ~ Trait2, value.var = "weight"))
   rownames(val) <- val[,1]
   mat <- matrix(nrow = length(traits), ncol = length(traits), dimnames = list(traits,traits))
   cols <- colnames(mat)[colnames(mat) %in% colnames(val)]
