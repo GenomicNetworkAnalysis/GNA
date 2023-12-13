@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring"){
+GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE){
   
   time<-proc.time()
   
@@ -37,8 +37,10 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
   colnames(p_rg)<-c("Trait1","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
 
   #calculate Bayes Factor for each partial rg
+  if(bayes){
   BF10 <- .BayesF(covstruc,p_rg,traits)
   p_rg <- merge(p_rg, BF10, by = c("Trait1","Trait2"))
+  }
 
   #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
