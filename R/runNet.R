@@ -31,7 +31,9 @@
     print("You have selected not to prune the edges in your network. Please ensure this is correct.")
   }
   
-  
+  if(all(p_rg$weight==0)){
+warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
+}else{
   # create weights matrix
   val <- as.matrix(reshape2::dcast(p_rg, Trait1 ~ Trait2, value.var = "weight"))
   rownames(val) <- val[,1]
@@ -55,7 +57,7 @@
   
   # centrality metrics
   centr <- centralityTable(network)
-  centr <- as.data.frame(dcast(centr, node ~ measure, value.var = "value"))
+  centr <- as.data.frame(reshape2::dcast(centr, node ~ measure, value.var = "value"))
   centr <- cbind(centr[,"node"],apply(centr[,c("Betweenness","Closeness","Strength","ExpectedInfluence")], 2, as.numeric))
   colnames(centr)[1] <- "Trait"
   
@@ -63,5 +65,5 @@
   out <- list(mat,network,centr)
   names(out) <- c("weights","graph","centrality")
   return(out)
-
+}
 }
