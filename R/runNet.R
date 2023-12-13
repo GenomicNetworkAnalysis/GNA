@@ -32,7 +32,8 @@
   }
   
   if(all(p_rg$weight==0)){
-warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
+    warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
+    out <- list(weights = NULL, graph = NULL, centrality = NULL)
 }else{
   # create weights matrix
   val <- as.matrix(reshape2::dcast(p_rg, Trait1 ~ Trait2, value.var = "weight"))
@@ -64,6 +65,8 @@ warning("There are no significant edges using the current pruning threhsold. A n
   
   out <- list(mat,network,centr)
   names(out) <- c("weights","graph","centrality")
+    }
+  
   return(out)
-}
+
 }
