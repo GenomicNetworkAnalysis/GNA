@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE){
+GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
   
   time<-proc.time()
   
@@ -23,7 +23,7 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
                     F1~~F2
                     ",y[1],"~~0*",y[1],"
                     ",y[2],"~~0*",y[2])
-    output <- .pcor(covstruc, model)
+    output <- .pcor(covstruc, model,toler)
     p_rg <- rbind(p_rg,output)
     p_rg[i,"Trait1"] <- y[1]
     p_rg[i,"Trait2"] <- y[2]
