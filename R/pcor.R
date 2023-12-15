@@ -1,4 +1,4 @@
-.pcor <-function(covstruc,model,toler=NULL){ 
+.pcor <-function(covstruc,model,toler){ 
 
   ##read in the LD portion of the V (sampling covariance) matrix
   V_LD<-as.matrix(covstruc[[1]])
