@@ -1,4 +1,4 @@
-.pcor <-function(covstruc,model){ 
+.pcor <-function(covstruc,model,toler=NULL){ 
 
   ##read in the LD portion of the V (sampling covariance) matrix
   V_LD<-as.matrix(covstruc[[1]])
@@ -31,7 +31,7 @@
   S2.W <- lavInspect(Model1_Results, "WLS.V") 
   
   #the "bread" part of the sandwich is the naive covariance matrix of parameter estimates that would only be correct if the fit function were correctly specified
-  bread <- solve(t(S2.delt)%*%S2.W%*%S2.delt)
+  bread <- solve(t(S2.delt)%*%S2.W%*%S2.delt,tol=toler)
 
   #create the "lettuce" part of the sandwich
   lettuce <- S2.W%*%S2.delt
