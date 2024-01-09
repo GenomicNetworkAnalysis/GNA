@@ -45,7 +45,7 @@
   mat[lower.tri(mat)] <- t(mat)[lower.tri(mat)]
   mat <- apply(mat, 2, as.numeric)
   rownames(mat) <- colnames(mat)
-  
+  diag(mat) <- 0
   
   # network graph
   ifelse(graph_layout == "mds",
