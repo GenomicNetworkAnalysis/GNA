@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
+GeneNet <- function(covstruc,type="sem",traits=NULL,fix_omega="full",simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
   
   time<-proc.time()
   
@@ -11,7 +11,9 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
   covstruc<-.covQC(covstruc,traits)
   
   print("Estimating partial genetic correlations.")
-  
+
+  if(type == "sem"){
+    
   p_rg <- data.frame()
   trait_pairs <- as.matrix(t(combn(traits, 2)))
   for (i in 1:nrow(trait_pairs)){
@@ -57,6 +59,12 @@ GeneNet <- function(covstruc,traits=NULL,simruns=100,prune="bonf",alpha=0.05,thr
   
   time_all<-proc.time()-time
   print(time_all[3])
+  
+  
+  }
+  if (type == "ggm"){
+    output <- .runGGM(covstruc,fix_omega,toler)
+    }
   
   return(output)
 }
