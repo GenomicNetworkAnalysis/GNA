@@ -7,7 +7,7 @@
   
   # If fixed omega matrix, recode - edges fixed to zero = 0; edge free = 1 (other integers encode equality constraints)
   if (is.matrix(fix_omega)) {
-    omega_fixed[fix_omega != 0] <- 1
+    fix_omega[fix_omega != 0] <- 1
     diag(fix_omega) <- 0
   }
   
