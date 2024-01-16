@@ -1,5 +1,6 @@
 exportPattern("^[^\\.]")
 import(lavaan)
+import(psychonetrics)
 import(reshape2)
 import(tidyverse)
 import(qgraph)
