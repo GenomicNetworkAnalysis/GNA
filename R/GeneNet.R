@@ -44,7 +44,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
       pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
       model_results <- list(model_results, c(model_out, pruned_omega))
       if (!recursive) break
-      if (pruned_omega == model_out$omega) break
+      if (all(pruned_omega == model_out$omega)) break
       }
     }
   
