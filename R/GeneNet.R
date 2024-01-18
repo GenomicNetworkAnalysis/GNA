@@ -42,7 +42,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
       pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
-      model_results <- list(model_results, c(model_out, list(pruned_omega=pruned_omega)))
+      model_results <- c(model_results, c(model_out, list(pruned_omega=pruned_omega)))
       if (!recursive) break
       if (all(pruned_omega == model_out$omega)) break
       }
@@ -57,7 +57,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     }
 
   #function output
-  output <- c(model_results=model_results, network=network)
+  output <- list(model_results=model_results, network=network)
   return(output)
 
   time_all<-proc.time()-time
