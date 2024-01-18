@@ -59,10 +59,13 @@
   SE <- as.vector(sqrt(diag(Ohtt)))
   
   ### extract results
-  results <- data.frame(Model_Results@parameters)[, c("var1","op","var2","est","se","p","matrix","par")]
-  results$se <- SE
-  results$se[results$par == 0] <- NA
-  results$p <- 2 * pnorm(abs(results$est / results$se), lower.tail = FALSE)
+  params <- data.frame(Model_Results@parameters)
+  params$se <- SE
+  params$se[params$par == 0] <- NA
+  params$z <- params$est / params$se
+  params$p <- 2 * pnorm(abs(params$est / params$se), lower.tail = FALSE)
+  params <- params[,c("var1","op","var2","est","se","z","p","matrix","par")]
+  colnames(params) <- c("trait1","op","trait2","est","se","z","p","matrix","free")
   
   #calculate model fit if there are pruned edges (otherwise fully saturated and not relevant)
   if(is.matrix(fix_omega)){
@@ -127,10 +130,8 @@
   modelfit<-cbind(model_chi,df,model_chi_p,SRMR,CFI)
   colnames(modelfit)=c("model_chisquare","df","modelchi_pvalue","SRMR", "CFI")
   
-  return(list(modelfit=modelfit,results=results,omega=omega,delta=delta,sigma=sigma))
-  
   }else{
-    return(list(results=results,omega=omega,delta=delta))
+    modelfit <- NULL
   }
-  
+  return(list(parameters=params,modelfit=modelfit,omega=omega,delta=delta,sigma=sigma))
 }
