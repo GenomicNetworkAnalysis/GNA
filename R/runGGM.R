@@ -84,13 +84,13 @@
   eta<-as.vector(lowerTriangle(resid,diag=TRUE))
   
   #matrix algebra weighting the vector of residuals by the precision of those residuals (i.e., P1 and Eig)
-  results$model_chi<-t(eta)%*%P1%*%solve(Eig2)%*%t(P1)%*%eta
+  model_chi<-t(eta)%*%P1%*%solve(Eig2)%*%t(P1)%*%eta
 
   #degrees of freedom of model (how many unique edges are fixed to 0)
-  results$df<-Model_Results@fitmeasures$df
+  df<-Model_Results@fitmeasures$df
 
   #calculate p-value for model chi-square
-  results$model_chi_p<-pchisq(model_chi,df,lower.tail=FALSE)
+  model_chi_p<-pchisq(model_chi,df,lower.tail=FALSE)
   
   #calculate SRMR
   
@@ -101,7 +101,7 @@
   imp <-  cov2cor(sigma)[!lower.tri(cov2cor(sigma))]
   
   #square root of the average squared residual 
-  results$SRMR<-sqrt(mean((imp - obs)^2))
+  SRMR<-sqrt(mean((imp - obs)^2))
   
   #calculate CFI:
   
