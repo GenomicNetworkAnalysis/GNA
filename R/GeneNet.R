@@ -39,7 +39,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bon
     network <- NULL
     warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
   } else{
-    network <- .describeNet(pruned_omega,graph_layout)
+    network <- NULL
     }
 
   #function output
