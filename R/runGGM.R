@@ -127,10 +127,10 @@
   modelfit<-cbind(model_chi,df,model_chi_p,SRMR,CFI)
   colnames(modelfit)=c("model_chisquare","df","modelchi_pvalue","SRMR", "CFI")
   
-  return(list(modelfit=modelfit,results=results))
+  return(list(modelfit=modelfit,results=results,omega=omega,delta=delta,sigma=sigma))
   
   }else{
-    return(results)
+    return(list(results=results,omega=omega,delta=delta))
   }
   
 }
