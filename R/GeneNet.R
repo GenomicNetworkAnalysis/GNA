@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
+GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
   
   time<-proc.time()
   
@@ -28,22 +28,34 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bon
 
   #prune network
   if(prune == "none"){
-    pruned_omega <- model_out$omega
     print("You have selected not to prune the edges in your network. Please ensure this is correct.")
+    pruned_omega <- model_out$omega
   } else{
+    print("Pruning non-significant network edges.")
     pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
+  }
+  model_out <- c(model_out, pruned_omega)
+
+  #restimate
+  if(reestimate){
+    print("Re-estimating the network.")
+    model_out_reestimate <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
+    pruned_omega <- model_out_reestimate$omega
+    model_results <- list(model1_results=model_out, model2_results=c(model_out_reestimate, pruned_network))
+  } else{
+    model_results <- list(model1_results=model_out)
   }
   
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
-    network <- NULL
     warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
+    network <- NULL
   } else{
     network <- .describeNet(pruned_omega,graph_layout)
     }
 
   #function output
-  output <- list(model_out,pruned_omega,network)
+  output <- c(model_results,network)
   return(output)
 
   time_all<-proc.time()-time
