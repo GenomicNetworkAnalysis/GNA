@@ -133,5 +133,11 @@
   }else{
     modelfit <- NULL
   }
+
+  traitnames <- list(colnames(S_LD),colnames(S_LD))
+  dimnames(omega) <- traitnames
+  dimnames(delta) <- traitnames
+  dimnames(sigma) <- traitnames
+  
   return(list(parameters=params,modelfit=modelfit,omega=omega,delta=delta,sigma=sigma))
 }
