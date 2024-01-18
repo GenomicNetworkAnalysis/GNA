@@ -41,7 +41,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     print("Re-estimating the network.")
     model_out_reestimate <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
     pruned_omega <- model_out_reestimate$omega
-    model_results <- list(model1_results=model_out, model2_results=c(model_out_reestimate, pruned_network))
+    model_results <- list(model1_results=model_out, model2_results=c(model_out_reestimate, pruned_omega))
   } else{
     model_results <- list(model1_results=model_out)
   }
