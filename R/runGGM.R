@@ -64,8 +64,8 @@
   params$se[params$par == 0] <- NA
   params$z <- params$est / params$se
   params$p <- 2 * pnorm(abs(params$est / params$se), lower.tail = FALSE)
-  params <- params[,c("var1","op","var2","est","se","z","p","matrix","par")]
-  colnames(params) <- c("trait1","op","trait2","est","se","z","p","matrix","free")
+  params <- params[,c("var1","op","var2","est","se","z","p","par","matrix","row","col")]
+  colnames(params) <- c("trait1","op","trait2","est","se","z","p","free","matrix","row","col")
   
   #calculate model fit if there are pruned edges (otherwise fully saturated and not relevant)
   if(is.matrix(fix_omega)){
