@@ -26,9 +26,23 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bon
   model_out$parameters$power<-powerNet
   }
 
-  #prune and plot the network
-  network <- .runNet(model_out,traits,prune,alpha,threshold,graph_layout)
+  #prune network
+  if(prune == "none"){
+    pruned_omega <- model_out$omega
+    print("You have selected not to prune the edges in your network. Please ensure this is correct.")
+  } else{
+    pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
+  }
+  
 
+  #network description - plotting and centrality metrics
+  if(all(pruned_omega == 0)){
+    network <- NULL
+    warning("There are no significant edges using the current pruning threhsold. A network graph will not be created")
+  } else{
+    network <- .describeNet(model_out,graph_layout)
+
+    
   #function output
   output <- c(model_out, network)
   names(output) <- c("partial_rgs","weights","graph","centrality")
