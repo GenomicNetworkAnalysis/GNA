@@ -29,6 +29,7 @@
   #update omega with pruned weights
   omega <- model_out$omega
   omega[par$row,par$col] <- par$weight
+  omega[par$col,par$row] <- par$weight
   
   return(omega)
 }
