@@ -1,10 +1,9 @@
-.pruneNet <- function(model_out,traits,prune="bonf",alpha=0.05,threshold=10){
+.pruneNet <- function(model_out,prune="bonf",alpha=0.05,threshold=10){
   
   par <- model_out$parameters[model_out$parameters$matrix=="omega"]
-  omega <- model_out$omega
+  par$weight <- par$est
   
   # prune non significant edges
-  
   if(prune == "bayes"){
     if(bayes){
       if(anyNA(par$BayesFactor10)){
@@ -28,10 +27,8 @@
   }
   
   #update omega with pruned weights
+  omega <- model_out$omega
   omega[par$row,par$col] <- par$weight
   
-  #reform parameter table
-  params <- rbind(par, model_out$parameters[model_out$parameters$matrix != "omega"])
-  
-  return(list(parameters=params,omega_pruned=omega))
+  return(omega)
 }
