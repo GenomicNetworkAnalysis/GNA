@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
+GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,recursive=TRUE,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
   
   time<-proc.time()
   
@@ -34,17 +34,19 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     print("Pruning non-significant network edges.")
     pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
   }
-  model_out <- c(model_out, pruned_omega)
+  model_results <- c(model_out, pruned_omega)
 
-  #restimate
-  if(reestimate){
+  #restimate the model (recursively)
+  if(reestimate && (prune != "none")){
     print("Re-estimating the network.")
-    model_out_reestimate <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
-    pruned_omega <- model_out_reestimate$omega
-    model_results <- list(model1_results=model_out, model2_results=c(model_out_reestimate, pruned_omega))
-  } else{
-    model_results <- list(model1_results=model_out)
-  }
+    repeat {
+      model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
+      pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
+      model_results <- list(model_results, c(model_out, pruned_omega))
+      if (!recursive) break
+      if (pruned_omega == model_out$omega) break
+      }
+    }
   
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
@@ -55,7 +57,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     }
 
   #function output
-  output <- c(model_results,network)
+  output <- list(model_results=model_results, network=network)
   return(output)
 
   time_all<-proc.time()-time
