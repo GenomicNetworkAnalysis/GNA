@@ -1,6 +1,6 @@
 .pruneNet <- function(model_out,prune="bonf",alpha=0.05,threshold=10){
   
-  par <- model_out$parameters[model_out$parameters$matrix=="omega"]
+  par <- model_out$parameters[model_out$parameters$matrix=="omega",]
   par$weight <- par$est
   
   # prune non significant edges
