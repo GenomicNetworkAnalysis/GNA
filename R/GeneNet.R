@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,type="sem",traits=NULL,fix_omega="full",simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
+GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL){
   
   time<-proc.time()
   
@@ -10,33 +10,9 @@ GeneNet <- function(covstruc,type="sem",traits=NULL,fix_omega="full",simruns=100
   #restrict to variables listed in traits and smooth matrix
   covstruc<-.covQC(covstruc,traits)
   
-  print("Estimating partial genetic correlations.")
-
-  if(type == "sem"){
-    
-  p_rg <- data.frame()
-  trait_pairs <- as.matrix(t(combn(traits, 2)))
-  for (i in 1:nrow(trait_pairs)){
-    y <- trait_pairs[i,]
-    x <- traits[!traits %in% y]
-    model <- paste0(paste0(y, collapse = "+"), "~", paste0(x, collapse = "+"),"
-                    F1=~",y[1],"
-                    F2=~",y[2],"
-                    F1~~F2
-                    ",y[1],"~~0*",y[1],"
-                    ",y[2],"~~0*",y[2])
-    output <- .pcor(covstruc, model,toler)
-    p_rg <- rbind(p_rg,output)
-    p_rg[i,"Trait1"] <- y[1]
-    p_rg[i,"Trait2"] <- y[2]
-  }
-  
-  p_rg$pvalue<-2*pnorm(abs(p_rg$Pcor_Estimate/p_rg$Pcor_SE),lower.tail=FALSE) 
-  
-  rownames(p_rg)<-NULL
-  p_rg<-data.frame(p_rg)
-  
-  colnames(p_rg)<-c("Trait1","Trait2","Pcor_Estimate", "Pcor_SE", "Pcor_pvalue")
+  #estimate network paramterers
+  print("Estimating network model.")
+  model_out <- .runGGM(covstruc,fix_omega,toler)
 
   #calculate Bayes Factor for each partial rg
   if(bayes){
@@ -46,25 +22,19 @@ GeneNet <- function(covstruc,type="sem",traits=NULL,fix_omega="full",simruns=100
 
   #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
-  powerNet<-.simNet(covstruc,simruns,trait_pairs)
-  p_rg$power<-powerNet
+  powerNet<-.simNet(covstruc,simruns)
+  model_out$parameters$power<-powerNet
   }
 
-  #estimate network
-  network <- .runNet(p_rg,traits,prune,alpha,threshold,graph_layout)
+  #prune and plot the network
+  network <- .runNet(model_out,traits,prune,alpha,threshold,graph_layout)
 
-  
-  output <- c(list(p_rg), network)
+  #function output
+  output <- c(model_out, network)
   names(output) <- c("partial_rgs","weights","graph","centrality")
   
+  return(output)
+
   time_all<-proc.time()-time
   print(time_all[3])
-  
-  
-  }
-  if (type == "ggm"){
-    output <- .runGGM(covstruc,fix_omega,toler)
-    }
-  
-  return(output)
 }
