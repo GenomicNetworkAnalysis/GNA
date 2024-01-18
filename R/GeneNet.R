@@ -34,7 +34,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     print("Pruning non-significant network edges.")
     pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
   }
-  model_results <- c(model_out, list(pruned_omega=pruned_omega))
+  model_results <- list(c(model_out, list(pruned_omega=pruned_omega)))
 
   #restimate the model (recursively)
   if(reestimate && (prune != "none")){
@@ -42,7 +42,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
       pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
-      model_results <- c(list(model_results), list(c(model_out, list(pruned_omega=pruned_omega))))
+      model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
       if (!recursive) break
       if (all(pruned_omega == model_out$omega)) break
       }
