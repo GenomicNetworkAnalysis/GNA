@@ -34,7 +34,6 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bon
     pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
   }
   
-
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
     network <- NULL
@@ -43,11 +42,8 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,prune="bon
     network <- .describeNet(model_out,graph_layout)
     }
 
-    
   #function output
-  output <- c(model_out, network)
-  names(output) <- c("partial_rgs","weights","graph","centrality")
-  
+  output <- list(model_out,pruned_omega,network)
   return(output)
 
   time_all<-proc.time()-time
