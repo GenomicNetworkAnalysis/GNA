@@ -13,7 +13,7 @@
   
   
   ### run the GGM
-  model <- varcov( type = "ggm", covs = S_LD, omega = fix_omega, nobs = 100, covtype = "UB", estimator = "ML", optimizer = "nlminb",covtype="ML")
+  model <- varcov( type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "nlminb")
   Model_Results <- runmodel(model)
   
   
