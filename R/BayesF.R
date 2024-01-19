@@ -18,6 +18,7 @@
 }
 
   # apply function across all partial rgs
+  p_rg <- na.omit(p_rg[p_rg$matrix == "omega",])
   cors <- cov2cor(covstruc$S_LD)[traits,traits]
   out_bf10 <- data.frame()
 
@@ -44,7 +45,7 @@
     out_bf10 <- rbind(out_bf10, c(y,x,r2_0,r2_1,BF10))
     }
   
-  colnames(out_bf10) <- c("Trait1","Trait2","R2_mod0","R2_mod1","BayesFactor10")
+  colnames(out_bf10) <- c("trait1","trait2","R2_mod0","R2_mod1","BayesFactor10")
   out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")] <- apply(out_bf10[,c("R2_mod0","R2_mod1","BayesFactor10")], 2, as.numeric)
   
   return(out_bf10)
