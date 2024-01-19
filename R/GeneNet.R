@@ -38,20 +38,24 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
 
   #restimate the model (recursively)
   if(reestimate && (prune != "none")){
-    print("Re-estimating the network.")
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
-      if (!recursive){
-      pruned_omega <- model_out$omega
-      model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
-        break
-      } else if (recursive){
+      if (recursive){
+        print("Re-estimating the network model (recursively).")
         pruned_omega <- .pruneNet(model_out,prune,alpha,threshold,bayes)
         model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
         if (all(pruned_omega == model_out$omega)) break
+        } else{
+        print("Re-estimating the network model (NOT recursively).")
+        pruned_omega <- model_out$omega
+        model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
+        break
         }
+      }
+    } else{
+    print("Network model not re-estimated")
     }
-  }
+  
   
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
