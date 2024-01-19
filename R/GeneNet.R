@@ -32,7 +32,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     pruned_omega <- model_out$omega
   } else{
     print("Pruning non-significant network edges.")
-    pruned_omega <- .pruneNet(model_out,prune,alpha,threshold)
+    pruned_omega <- .pruneNet(model_out,prune,alpha,threshold,bayes)
   }
   model_results <- list(c(model_out, list(pruned_omega=pruned_omega)))
 
