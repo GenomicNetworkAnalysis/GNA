@@ -10,7 +10,6 @@
   # centrality metrics
   centr <- centralityTable(graph)
   centr <- as.data.frame(reshape2::dcast(centr, node ~ measure, value.var = "value"))
-  centr <- cbind(centr[,"node"],apply(centr[,c("Betweenness","Closeness","Strength","ExpectedInfluence")], 2, as.numeric))
   colnames(centr)[1] <- "Trait"
   
   return(list(graph=graph,centrality=centr))
