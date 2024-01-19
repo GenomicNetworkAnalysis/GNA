@@ -1,4 +1,4 @@
-.BayesF <- function(covstruc, p_rg, traits){
+.BayesF <- function(covstruc, model_out, traits){
   
   # define function to calculate bayes factor .. (JZS Bayes factor - adapted from doi.org/10.3758/s13423-012-0295-x)
   jzs_bayes <- function(r2_0,r2_1,p0,p1,n){
@@ -18,14 +18,14 @@
 }
 
   # apply function across all partial rgs
-  p_rg <- na.omit(p_rg[p_rg$matrix == "omega",])
-  cors <- cov2cor(covstruc$S_LD)[traits,traits]
+  p_rg <- na.omit(model_out$parameters[model_out$parameters$matrix == "omega",])
+  cors <- cov2cor(covstruc[[2]])[traits,traits]
   out_bf10 <- data.frame()
 
   for (i in 1:nrow(p_rg)){
     pair <- p_rg[i,]
-    y <- pair$Trait1
-    x <- pair$Trait2
+    y <- pair$trait1
+    x <- pair$trait2
     tmp1 <- !traits %in% c(y, x)
     tmp2 <- !traits %in% y
     
@@ -38,7 +38,7 @@
     r2_1 <- as.numeric(t(ryx_1) %*% solve(rxx_1) %*% ryx_1)    #multiple R2 for model 1 (full model)
     p0 <- as.numeric(length(traits)-2)
     p1 <- as.numeric(length(traits)-1)
-    n <- as.numeric((((1-(pair$Pcor_Estimate^2))/pair$Pcor_SE)^2)+length(traits))
+    n <- as.numeric((((1-(pair$est^2))/pair$se)^2)+length(traits))
     
     BF10 <- jzs_bayes(r2_0, r2_1, p0, p1, n)
     
