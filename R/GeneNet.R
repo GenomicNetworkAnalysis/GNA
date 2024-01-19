@@ -42,14 +42,16 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
       if (!recursive){
-        model_results <- c(model_results, list(model_out))
-        break
-        }
-      pruned_omega <- .pruneNet(model_out,prune,alpha,threshold,bayes)
+      pruned_omega <- model_out$omega
       model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
-      if (all(pruned_omega == model_out$omega)) break
-      }
+        break
+      } else if (recursive){
+        pruned_omega <- .pruneNet(model_out,prune,alpha,threshold,bayes)
+        model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
+        if (all(pruned_omega == model_out$omega)) break
+        }
     }
+  }
   
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
