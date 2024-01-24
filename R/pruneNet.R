@@ -1,4 +1,4 @@
-.pruneNet <- function(model_out,prune="bonf",alpha=0.05,threshold=10,bayes){
+.pruneNet <- function(model_out,prune="bonf",alpha=0.05,threshold=10,bayes,prunepower=FALSE){
   
   par <- model_out$parameters[model_out$parameters$matrix=="omega",]
   par$weight <- par$est
@@ -24,6 +24,10 @@
   
   if(prune == "alpha"){
     par$weight[par$p >= alpha] <- 0
+  }
+
+  if(prunepower){
+   par$weight[par$power < .8] <- 0 
   }
   
   #update omega with pruned weights
