@@ -1,7 +1,7 @@
 .simNet<-function(covstruc,simruns,prune){
   
   print("Beginning estimation of simulated partial correlations to produce power estimates for each edge weight.
-        This step may take up to a few hours depending on the number of included traits.")
+        This step typically takes a few minutes.")
   
   #sample vector of genetic covariance matrix (S) estimates using:
   #observed S (genetic covariance matrix) as mean vector
@@ -52,9 +52,11 @@
     }
   
     #store p-value for each partial correlation for given simulation 
-    simresults[,r]<-p_rg_sim$p
+    if(prune == "fdr"){
+    simresults[,r]<-p.adjust(p_rg_sim$p, method='fdr')
+    }else{simresults[,r]<-p_rg_sim$p}
     
-    print(paste0("Estimated Simulation ", r, sep = " "))
+  
   }
   
   # Set appropriate threshold for p-values
@@ -66,10 +68,8 @@
   }
   
   if(prune == "fdr"){
-    
+    powerNet<-(apply(simresults, 1, function(row) sum(row < .05)))/simruns
   }
-  
-
   
   return(powerNet)
   
