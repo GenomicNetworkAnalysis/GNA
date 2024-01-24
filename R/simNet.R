@@ -56,7 +56,6 @@
     simresults[,r]<-p.adjust(p_rg_sim$p, method='fdr')
     }else{simresults[,r]<-p_rg_sim$p}
     
-  
   }
   
   # Set appropriate threshold for p-values
