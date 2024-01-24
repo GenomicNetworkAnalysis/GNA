@@ -19,7 +19,7 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
   BF10 <- .BayesF(covstruc,model_out)
   model_out$parameters <- merge(model_out$parameters, BF10, by = c("trait1","trait2"), all.x = TRUE)
   #sort by original ordering in model_out$parameters to ensure appropriate values are appended in code below
-  modelout$parameters<-modelout$parameters[order(free),]
+  model_out$parameters<-model_out$parameters[order(free),]
   }
 
   #simulations to estimate power for each partial rg
