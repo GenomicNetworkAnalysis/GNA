@@ -122,16 +122,10 @@ return(list(V_LD=V_LD,S_LD=S_LD))
     return(V_SNP)
 }
 
-.get_Z_pre <- function(i, beta_SNP, SE_SNP, I_LD, GC) {
-    if(GC == "conserv"){
-        Z_pre<-beta_SNP[i,]/(SE_SNP[i,]*diag(I_LD))
-    }
-    if(GC=="standard"){
-        Z_pre<-beta_SNP[i,]/(SE_SNP[i,]*sqrt(diag(I_LD)))
-    }
-    if(GC=="none"){
-        Z_pre<-beta_SNP[i,]/SE_SNP[i,]
-    }
+.get_Z_pre <- function(i, beta_SNP, SE_SNP, I_LD) {
+
+Z_pre<-beta_SNP[i,]/(SE_SNP[i,]*sqrt(diag(I_LD)))
+
     return(Z_pre)
 }
             
