@@ -127,7 +127,7 @@
   CFI<-as.numeric(((CFI_chi-dfCFI)-(model_chi-df))/(CFI_chi-dfCFI))
 
   #calculate AIC
-  AIC<-(model_chi + 2*Model_Results@fitmeasures$df)
+  AIC<-(model_chi - 2*Model_Results@fitmeasures$df)
   
   #combine model fit indices
   modelfit<-cbind(model_chi,df,model_chi_p,AIC, SRMR,CFI)
