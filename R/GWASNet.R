@@ -99,7 +99,7 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   }else{
     if (cores > nrow(SNPs))
       warning(paste0("Provided number of cores was greater than number of SNPs, reverting to cores=",nrow(SNPs)))
-    int <- min(c(cores, nrow(SNPs))
+    int <- min(c(cores, nrow(SNPs)))
   }
     
     ##specify the cores should have access to the local environment
