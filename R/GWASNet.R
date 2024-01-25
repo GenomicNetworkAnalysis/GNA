@@ -113,7 +113,7 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
     registerDoParallel(cl)
     on.exit(stopCluster(cl))
   
-  #split the V_SNP and S_SNP matrices into as many (cores - 1) as are aviailable on the local computer
+  #split the V_SNP and S_SNP matrices across cores to run these batches in parallel
   SNPs <- suppressWarnings(split(SNPs,1:int))
   beta_SNP <- suppressWarnings(split(beta_SNP,1:int))
   SE_SNP <- suppressWarnings(split(SE_SNP,1:int))
