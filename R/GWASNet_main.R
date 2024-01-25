@@ -110,7 +110,7 @@
   if(TWAS){
   colnames(output)<-c("i", "Gene","Panel","HSQ","Z_smooth",colnames(params))
   }else{
-    colnames(output<-c("i", "SNP", "CHR", "BP", "MAF", "A1", "A2","Z_smooth",colnames(params))
+    colnames(output)<-c("i", "SNP", "CHR", "BP", "MAF", "A1", "A2","Z_smooth",colnames(params))
   }
   
   return(output)
