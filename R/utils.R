@@ -1,4 +1,4 @@
-.sandwichSE<-function(Model_Results,V){
+.sandwichSE<-function(Model_Results,V,toler){
   
   ### get necessary model matrices / information
   omega <- getmatrix(Model_Results, "omega") #weight matrix
