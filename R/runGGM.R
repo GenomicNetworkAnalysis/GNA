@@ -20,7 +20,7 @@
   sigma <- getmatrix(Model_Results, "sigma") #mod-implied cov matrix
 
   #get sandwich corrected SEs from internal function
-  SE<-.sandwichSE(Model_Results,V_LD)
+  SE<-.sandwichSE(Model_Results,V_LD,toler)
   
   ### extract results
   params <- data.frame(Model_Results@parameters)
