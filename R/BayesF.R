@@ -39,7 +39,7 @@
     r2_1 <- as.numeric(t(ryx_1) %*% solve(rxx_1) %*% ryx_1)    #multiple R2 for model 1 (full model)
     p0 <- as.numeric(length(traits)-2)
     p1 <- as.numeric(length(traits)-1)
-    n <- as.numeric((((1-(pair$est^2))/pair$se)^2)+length(traits))
+    n <- as.numeric((((1-(pair$est^2))^2)/(pair$se^2))+length(traits)+1)
     
     BF10 <- jzs_bayes(r2_0, r2_1, p0, p1, n)
     
