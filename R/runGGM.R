@@ -92,10 +92,23 @@
 
   #calculate AIC
   AIC<-(model_chi - 2*Model_Results@fitmeasures$df)
+
+  ###calculate eBIC - TESTING, NEED TO CHECK
+  npar = Model_Results@fitmeasures$npar
+  nvar = Model_Results@fitmeasures$nvar
+  # effective N of weight matrix. based on formula for estiming sampling variance of partial correlation (see van Aert & Goos, 2023).. mean of edge-wise Ns 
+  neff <- mean(((((1-(params$est[params$matrix=="omega"]^2))^2)/(params$se[params$matrix=="omega"]^2)) + Model_Results@fitmeasures$nvar + 1), na.rm = TRUE)
+    
+  # calc eBICs (based on Foygel & Drton, 2010)
+  BIC <- model_chi + (npar*log(neff))
+  eBIC.25 <- model_chi + (npar*log(neff)) + (4*npar*0.25*log(nvar))
+  eBIC.50 <- model_chi + (npar*log(neff)) + (4*npar*0.50*log(nvar))
+  eBIC.75 <- model_chi + (npar*log(neff)) + (4*npar*0.75*log(nvar))
+  eBIC1 <- model_chi + (npar*log(neff)) + (4*npar*1*log(nvar))
   
   #combine model fit indices
-  modelfit<-cbind(model_chi,df,model_chi_p,AIC, SRMR,CFI)
-  colnames(modelfit)=c("model_chisquare","df","modelchi_pvalue","AIC", "SRMR", "CFI")
+  modelfit<-cbind(model_chi,df,model_chi_p, SRMR,CFI,AIC,BIC,eBIC.25,eBIC.50,eBIC.75,eBIC1)
+  colnames(modelfit)=c("model_chisquare","df","modelchi_pvalue", "SRMR", "CFI","AIC","BIC","eBIC.25","eBIC.50","eBIC.75","eBIC1")
   
   }else{
     modelfit <- NULL
