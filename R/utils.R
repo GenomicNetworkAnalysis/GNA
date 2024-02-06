@@ -181,8 +181,12 @@ Z_pre<-beta_SNP[i,]/(SE_SNP[i,]*sqrt(diag(I_LD)))
 .pruneNet <- function(model_out,prune="fdr",alpha=0.05,prunepower=FALSE){
   
   par <- model_out$parameters[model_out$parameters$matrix=="omega",] #pull parameters table
-  par$p_adj <- p.adjust(par$p, method=prune) #adjusted pvals
-  par$weight <- if_else(par$p_adj < alpha, par$est, 0) #prune non-significant edges
+  #adjusted pvals
+  par$p_adj <- p.adjust(par$p, method=prune) 
+  #prune non-significant edges
+  par$weight <- par$est
+  par$weight[par$p_adj >= alpha] <- 0
+   
   
   if(prunepower){
    par$weight[par$power < .8] <- 0 
