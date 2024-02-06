@@ -17,7 +17,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   
   #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
-    powerNet<-.simNet(covstruc,simruns,prune)
+    powerNet<-.simNet(covstruc,simruns,p.adjust,alpha)
     model_results$saturated$parameters$power<-c(powerNet,rep(NA,ncol(covstruc$S_LD)))
   }
   
