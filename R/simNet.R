@@ -1,4 +1,4 @@
-.simNet<-function(covstruc,simruns,prune){
+.simNet<-function(covstruc,simruns,p.adjust,alpha){
   
   print("Beginning estimation of simulated partial correlations to produce power estimates for each edge weight.
         This step typically takes a few minutes.")
@@ -52,24 +52,13 @@
     }
   
     #store p-value for each partial correlation for given simulation 
-    if(prune == "fdr"){
-    simresults[,r]<-p.adjust(p_rg_sim$p, method='fdr')
-    }else{simresults[,r]<-p_rg_sim$p}
+    simresults[,r]<-p.adjust(p_rg_sim$p, method=p.adjust)
     
   }
   
-  # Set appropriate threshold for p-values
-  if(prune == "bonf"){
-  threshold<-.05/nrow(simresults)
-  
   #calculate proportion of runs that were significant for each parameter (i.e., power)
-  powerNet<-(apply(simresults, 1, function(row) sum(row < threshold)))/simruns
-  }
-  
-  if(prune == "fdr"){
-    powerNet<-(apply(simresults, 1, function(row) sum(row < .05)))/simruns
-  }
+  powerNet<-(apply(simresults, 1, function(row) sum(row < alpha)))/simruns
   
   return(powerNet)
-  
+
 }
