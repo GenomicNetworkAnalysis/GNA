@@ -1,4 +1,4 @@
-.runGGM <- function(covstruc,fix_omega="full",saturated=NULL,toler) {
+.runGGM <- function(covstruc,fix_omega="full",saturated=NULL,toler=NULL) {
   
   # read in V (sampling covariance) and S (covariance) matrices
   V_LD <- as.matrix(covstruc[[1]]) 
