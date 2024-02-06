@@ -26,10 +26,10 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
     pruned_omega <- model_out$omega
   } else{
     if(prunepower){
-       print("Pruning non-significant network edges and edges with < 80% power in simulation.")
+       print(paste0("Pruning non-significant network edges ('",prune,"' adjusted p-value > ",alpha,") and edges with < 80% power in simulation"))
          pruned_omega <- .pruneNet(model_out,prune,alpha,prunepower)
       }
-    else{print("Pruning non-significant network edges.")
+    else{print(paste0("Pruning non-significant network edges ('",prune,"' adjusted p-value > ",alpha,")"))
     pruned_omega <- .pruneNet(model_out,prune,alpha)
   }
       }
@@ -37,23 +37,25 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
 
   #restimate the model (recursively)
   if(reestimate && (prune != "none")){
+    iter <- 0
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
       if (recursive){
-        print("Re-estimating the network model (recursively).")
+        iter <- iter+1
+        print(paste0("Re-estimating the network model (iteration ",iter,")."))
         pruned_omega <- .pruneNet(model_out,prune,alpha)
         model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
         if (all(pruned_omega == model_out$omega)) break
-        } else{
-        print("Re-estimating the network model (NOT recursively).")
+      } else{
+        print("Re-estimating the network model.")
         pruned_omega <- model_out$omega
         model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
         break
-        }
       }
-    } else{
-    print("Network model not re-estimated")
     }
+  } else{
+    print("Network model not re-estimated")
+  }
   
   
   #network description - plotting and centrality metrics
