@@ -178,11 +178,11 @@ Z_pre<-beta_SNP[i,]/(SE_SNP[i,]*sqrt(diag(I_LD)))
 }
 
 
-.pruneNet <- function(model_out,prune="fdr",alpha=0.05,prunepower=FALSE){
+.pruneNet <- function(model_out,p.adjust="fdr",alpha=0.05,prunepower=FALSE){
   
   par <- model_out$parameters[model_out$parameters$matrix=="omega",] #pull parameters table
   #adjusted pvals
-  par$p_adj <- p.adjust(par$p, method=prune) 
+  par$p_adj <- p.adjust(par$p, method=p.adjust) 
   #prune non-significant edges
   par$weight <- par$est
   par$weight[par$p_adj >= alpha] <- 0
