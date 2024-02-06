@@ -10,53 +10,66 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   #restrict to variables listed in traits and smooth matrix
   covstruc<-.covQC(covstruc,traits)
   
-  #estimate network paramterers
-  print("Estimating network model.")
-  model_out <- .runGGM(covstruc,fix_omega,toler)
-
+  #estimate saturated network parameters
+  print("Estimating saturated network model.")
+  model_out <- .runGGM(covstruc,fix_omega="full",toler)
+  model_results <- list(saturated=model_out)
+  
   #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
-  powerNet<-.simNet(covstruc,simruns,prune)
-  model_out$parameters$power<-c(powerNet,rep(NA,ncol(covstruc$S_LD)))
+    powerNet<-.simNet(covstruc,simruns,prune)
+    model_results$model_satured$parameters$power<-c(powerNet,rep(NA,ncol(covstruc$S_LD)))
   }
-
-  #prune network
+  
+  #estimate base sparse network parameters (if fixed omega matrix provided)
+  if(is.matrix(fix_omega)){
+    print("Estimating base sparse network model.")
+    model_out <- .runGGM(covstruc,fix_omega,toler)
+    model_results <- c(model_results, list(base=model_out))
+  }
+  
+  #network pruning and re-estimation
+  #initial network pruning
   if(prune){
     if(prunepower){
-      print(paste0("Pruning non-significant network edges ('",p.adjust,"' adjusted p-value > ",alpha,") and edges with < 80% power in simulation"))
+      print(paste0("Pruning non-significant network edges (alpha = ",alpha,", p-value adjust = '",p.adjust,"') and edges with < 80% power in simulation"))
       pruned_omega <- .pruneNet(model_out,p.adjust,alpha,prunepower)
     }else{
-      print(paste0("Pruning non-significant network edges ('",p.adjust,"' adjusted p-value > ",alpha,")"))
+      print(paste0("Pruning non-significant network edges (alpha = ",alpha,", p-value adjust = '",p.adjust,"')"))
       pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
+    }
+    
+    # restimate the network (recursively)
+    if(reestimate){
+      model_iterations <- list()
+      iter <- 0
+      repeat {
+        model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
+        model_iterations <- c(model_iterations, list(model_out))
+        
+        if (recursive){
+          iter <- iter+1
+          print(paste0("Re-estimating the network model (iteration ",iter,")."))
+          pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
+          if (all(pruned_omega == model_out$omega)){
+            names(model_iterations) <- c(paste0("iteration",1:(iter-1)),"sparse")
+            break
+          }
+        } else{
+          print("Re-estimating the network model.")
+          pruned_omega <- model_out$omega
+          names(model_iterations) <- "sparse"
+          break
+        }
+      }
+      model_results <- c(model_results, model_iterations)
+    } else{
+      print("Network model not re-estimated")
     }
   }else{
     print("You have selected not to prune the edges in your network. Please ensure this is correct.")
     pruned_omega <- model_out$omega
   }
-  model_results <- list(c(model_out, list(pruned_omega=pruned_omega)))
-
-  #restimate the model (recursively)
-  if(reestimate && prune){
-    iter <- 0
-    repeat {
-      model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
-      if (recursive){
-        iter <- iter+1
-        print(paste0("Re-estimating the network model (iteration ",iter,")."))
-        pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
-        model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
-        if (all(pruned_omega == model_out$omega)) break
-      } else{
-        print("Re-estimating the network model.")
-        pruned_omega <- model_out$omega
-        model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
-        break
-      }
-    }
-  } else{
-    print("Network model not re-estimated")
-  }
-  
   
   #network description - plotting and centrality metrics
   if(all(pruned_omega == 0)){
