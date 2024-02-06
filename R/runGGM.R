@@ -1,4 +1,4 @@
-.runGGM <- function(covstruc,fix_omega="full",toler) {
+.runGGM <- function(covstruc,fix_omega="full",saturated=NULL,toler) {
   
   # read in V (sampling covariance) and S (covariance) matrices
   V_LD <- as.matrix(covstruc[[1]]) 
@@ -97,7 +97,7 @@
   npar = Model_Results@fitmeasures$npar
   nvar = Model_Results@fitmeasures$nvar
   # effective N of weight matrix. based on formula for estiming sampling variance of partial correlation (see van Aert & Goos, 2023).. mean of edge-wise Ns 
-  neff <- mean(((((1-(params$est[params$matrix=="omega"]^2))^2)/(params$se[params$matrix=="omega"]^2)) + Model_Results@fitmeasures$nvar + 1), na.rm = TRUE)
+  neff <- mean(((((1-(saturated$parameters$est[saturated$parameters$matrix=="omega"]^2))^2)/(saturated$parameters$se[saturated$parameters$matrix=="omega"]^2)) + Model_Results@fitmeasures$nvar + 1), na.rm = TRUE)
     
   # calc eBICs (based on Foygel & Drton, 2010)
   BIC <- model_chi + (npar*log(neff))
