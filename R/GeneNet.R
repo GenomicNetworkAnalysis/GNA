@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,recursive=TRUE,prune="bonf",alpha=0.05,threshold=10,graph_layout="spring",bayes=TRUE,toler=NULL,prunepower=TRUE){
+GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,recursive=TRUE,prune="fdr",alpha=0.05,graph_layout="spring",toler=NULL,prunepower=TRUE){
   
   time<-proc.time()
   
@@ -13,14 +13,6 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
   #estimate network paramterers
   print("Estimating network model.")
   model_out <- .runGGM(covstruc,fix_omega,toler)
-
-  #calculate Bayes Factor for each partial rg
-  if(bayes){
-  BF10 <- .BayesF(covstruc,model_out)
-  model_out$parameters <- merge(model_out$parameters, BF10, by = c("trait1","trait2"), all.x = TRUE)
-  #sort by original ordering in model_out$parameters to ensure appropriate values are appended in code below
-  model_out$parameters<-model_out$parameters[order(model_out$parameters$free),]
-  }
 
   #simulations to estimate power for each partial rg
   if(is.numeric(simruns)){
