@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate=TRUE,recursive=TRUE,prune="fdr",alpha=0.05,graph_layout="spring",toler=NULL,prunepower=FALSE){
+GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,graph_layout="mds",simruns=NULL,prunepower=FALSE,traits=NULL,toler=NULL){
   
   time<-proc.time()
   
@@ -21,29 +21,29 @@ GeneNet <- function(covstruc,traits=NULL,fix_omega="full",simruns=100,reestimate
   }
 
   #prune network
-  if(prune == "none"){
+  if(prune){
+    if(prunepower){
+      print(paste0("Pruning non-significant network edges ('",p.adjust,"' adjusted p-value > ",alpha,") and edges with < 80% power in simulation"))
+      pruned_omega <- .pruneNet(model_out,p.adjust,alpha,prunepower)
+    }else{
+      print(paste0("Pruning non-significant network edges ('",p.adjust,"' adjusted p-value > ",alpha,")"))
+      pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
+    }
+  }else{
     print("You have selected not to prune the edges in your network. Please ensure this is correct.")
     pruned_omega <- model_out$omega
-  } else{
-    if(prunepower){
-       print(paste0("Pruning non-significant network edges ('",prune,"' adjusted p-value > ",alpha,") and edges with < 80% power in simulation"))
-         pruned_omega <- .pruneNet(model_out,prune,alpha,prunepower)
-      }
-    else{print(paste0("Pruning non-significant network edges ('",prune,"' adjusted p-value > ",alpha,")"))
-    pruned_omega <- .pruneNet(model_out,prune,alpha)
   }
-      }
   model_results <- list(c(model_out, list(pruned_omega=pruned_omega)))
 
   #restimate the model (recursively)
-  if(reestimate && (prune != "none")){
+  if(reestimate && prune){
     iter <- 0
     repeat {
       model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
       if (recursive){
         iter <- iter+1
         print(paste0("Re-estimating the network model (iteration ",iter,")."))
-        pruned_omega <- .pruneNet(model_out,prune,alpha)
+        pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
         model_results <- c(model_results, list(c(model_out, list(pruned_omega=pruned_omega))))
         if (all(pruned_omega == model_out$omega)) break
       } else{
