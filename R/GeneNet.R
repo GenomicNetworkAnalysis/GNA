@@ -24,7 +24,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   #estimate base sparse network parameters (if fixed omega matrix provided)
   if(is.matrix(fix_omega)){
     print("Estimating base sparse network model.")
-    model_out <- .runGGM(covstruc,fix_omega,toler)
+    model_out <- .runGGM(covstruc,fix_omega,toler,saturated=model_results$saturated)
     model_results <- c(model_results, list(base=model_out))
   }
   
@@ -44,7 +44,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
       model_iterations <- list()
       iter <- 0
       repeat {
-        model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler)
+        model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler,saturated=model_results$saturated)
         model_iterations <- c(model_iterations, list(model_out))
         
         if (recursive){
