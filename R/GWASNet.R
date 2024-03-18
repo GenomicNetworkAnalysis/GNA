@@ -1,6 +1,10 @@
 GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,parallel=TRUE,cores=NULL){
   
   time<-proc.time()
+
+  #pull the betas and SEs from the sumstats output
+  beta_SNP <- SNPs[,grep("beta.",fixed=TRUE,colnames(SNPs))]
+  SE_SNP <- SNPs[,grep("se.",fixed=TRUE,colnames(SNPs))]
   
   #pull variance from output and save relevant columns
   if (TWAS) {
@@ -36,11 +40,7 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   
   #set univariate intercepts to 1 if estimated below 1
   diag(I_LD) <- ifelse(diag(I_LD)<= 1, 1, diag(I_LD))
-  
-  #pull the betas and SEs from the sumstats output
-  beta_SNP <- SNPs[,grep("beta.",fixed=TRUE,colnames(SNPs))]
-  SE_SNP <- SNPs[,grep("se.",fixed=TRUE,colnames(SNPs))]
-  
+    
   #number of phenotypes
   n_phenotypes <- ncol(beta_SNP)
   
