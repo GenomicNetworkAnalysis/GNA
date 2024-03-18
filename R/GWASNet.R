@@ -2,6 +2,9 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   
   time<-proc.time()
 
+  #determine operating system; relevant for parallel runs
+  Operating <- Sys.info()[['sysname']]
+  
   #pull the betas and SEs from the sumstats output
   beta_SNP <- SNPs[,grep("beta.",fixed=TRUE,colnames(SNPs))]
   SE_SNP <- SNPs[,grep("se.",fixed=TRUE,colnames(SNPs))]
@@ -74,7 +77,7 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   
   #run in serial 
   if(!parallel){
-  
+ 
     for (i in 1:nrow(beta_SNP)) {
       
       if(i == 1){
@@ -85,7 +88,14 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
         }
       }
       
-     SNPnet   <- .GWASNet_main(i, cores=1, n_phenotypes, 1, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omegaFull,coords)
+     SNPrun   <- .GWASNet_main(i, cores=1, n_phenotypes, 1, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omegaFull,coords)
+     if(i == 1){
+       #create empty data.frame to store results
+       SNPnet <- as.data.frame(matrix(NA,ncol=ncol(SNPrun),nrow=nrow(SNPs)))
+       colnames(SNPnet)<-colnames(SNPrun)
+       }
+      #store results from each run 
+      SNPnet[i,]<-SNPrun[1,]
       
     }
 }
