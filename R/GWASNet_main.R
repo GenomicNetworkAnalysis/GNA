@@ -14,11 +14,11 @@
   V_SNP <- .get_V_SNP(SE_SNP, I_LD, varSNP, coords, k, i)
 
   #append the SNP-V matrix with the larger V matrix
-  V_full <- .get_V_full(k, V_LD, varSNPSE2, V_SNP)
+  V_Full <- .get_V_full(k, V_LD, varSNPSE2, V_SNP)
   
   #smooth V if necessary
-  if(eigen(V_full)$values[nrow(V_full)] <= 0){
-    V_full <- as.matrix((nearPD(V_full, corr = FALSE))$mat)
+  if(eigen(V_Full)$values[nrow(V_Full)] <= 0){
+    V_Full <- as.matrix((nearPD(V_Full, corr = FALSE))$mat)
     V_smooth <- 1
   }
   
@@ -53,7 +53,7 @@
   #save difference in Z-statis pre and post smoothing
   if(exists("S_smooth") | exists("V_smooth")){
     SE_smooth <- matrix(0, ks, ks)
-    SE_smooth[lower.tri(SE_smooth,diag=TRUE)]  <- sqrt(diag(V_full))
+    SE_smooth[lower.tri(SE_smooth,diag=TRUE)]  <- sqrt(diag(V_Full))
     Z_smooth <- (S_Fullrun/SE_smooth)[2:ks,1]
     Z_smooth <- max(abs(Z_smooth-Z_pre))
   }else{
