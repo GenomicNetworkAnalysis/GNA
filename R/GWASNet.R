@@ -151,6 +151,7 @@ GWASNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   }
   
   SNPnet$i <- NULL
+  rownames(SNPnet)<-NULL
   
   time_all <- proc.time()-time
   print(time_all[3])
