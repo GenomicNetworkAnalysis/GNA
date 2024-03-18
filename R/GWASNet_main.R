@@ -81,7 +81,7 @@
   Model_Results <- runmodel(model)
   
   #get sandwich corrected SEs
-  SE<-.sandwichSE(Model_Results,V_Full)
+  SE<-.sandwichSE(Model_Results,V_Full,toler)
   
   ### extract results and calculate Z and p
   params <- data.frame(Model_Results@parameters)
