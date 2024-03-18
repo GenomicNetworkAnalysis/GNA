@@ -69,13 +69,7 @@
   
   ##name rows like columns
   rownames(S_Full) <- colnames(S_Full)
-  
-  # If fixed omega matrix, recode - edges fixed to zero = 0; edge free = 1 (other integers encode equality constraints)
-  if (is.matrix(fix_omega)) {
-    fix_omega[fix_omega != 0] <- 1
-    diag(fix_omega) <- 0
-  }
-  
+
   ### run the GGM 
   model <- varcov( type = "ggm", covs = S_Full, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "nlminb")
   Model_Results <- runmodel(model)
@@ -86,7 +80,7 @@
   ### extract results and calculate Z and p
   params <- data.frame(Model_Results@parameters)
   params$se <- SE
-  params<-subset(params,params$var1 == "SNP" | params$var2 == "SNP" & !(params$var1 == "SNP" & params$var2 == "SNP"))
+  params<-subset(params,(params$var1 == "SNP" | params$var2 == "SNP") & !(params$var1 == "SNP" & params$var2 == "SNP"))
   params$Zstat <- params$est / params$se
   params$p <- 2 * pnorm(abs(params$est / params$se), lower.tail = FALSE)
   
