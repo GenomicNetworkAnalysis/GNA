@@ -52,7 +52,11 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
           print(paste0("Re-estimating the network model (iteration ",iter,")."))
           pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
           if (all(pruned_omega == model_out$omega)){
-            names(model_iterations) <- c(paste0("iteration",1:(iter-1)),"sparse")
+            if(iter=1){
+              names(model_iterations) <- c("sparse")
+            } else{
+              names(model_iterations) <- c(paste0("iteration",1:(iter-1)),"sparse")
+            }
             break
           }
         } else{
