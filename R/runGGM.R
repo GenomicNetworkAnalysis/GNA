@@ -11,7 +11,7 @@
   }
   
   ### run the GGM 
-  model <- varcov( type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "nlminb")
+  model <- varcov( type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "ucminf")
   Model_Results <- runmodel(model)
 
   ### get necessary model matrices / information
