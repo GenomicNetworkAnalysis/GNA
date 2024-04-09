@@ -78,19 +78,32 @@
   SE<-.sandwichSE(Model_Results,V_Full,toler)
   
   ### extract results and calculate Z and p
-  params <- data.frame(Model_Results@parameters)
+   params <- data.frame(Model_Results@parameters)
   params$se <- SE
-  params<-subset(params,(params$var1 == "SNP" | params$var2 == "SNP") & !(params$var1 == "SNP" & params$var2 == "SNP"))
   params$Zstat <- params$est / params$se
   params$p <- 2 * pnorm(abs(params$est / params$se), lower.tail = FALSE)
   
+  if(TWAS){
+    params<-subset(params,(params$var1 == "Gene" | params$var2 == "Gene") & !(params$var1 == "Gene" & params$var2 == "Gene"))
+    
+    #save relevant columns
+    params <- params[,c("var1","est","se","Zstat","p")]
+    colnames(params) <- c("Trait","Genepcor_est","Genepcor_se","Zstat","p")
+    
+    #go from long to wide format
+    params <- params  %>%
+      pivot_wider(names_from = Trait, values_from = c("Genepcor_est", "Genepcor_se", "Zstat", "p"))
+  }else{
+  params<-subset(params,(params$var1 == "SNP" | params$var2 == "SNP") & !(params$var1 == "SNP" & params$var2 == "SNP"))
+
   #save relevant columns
   params <- params[,c("var1","est","se","Zstat","p")]
   colnames(params) <- c("Trait","SNPpcor_est","SNPpcor_se","Zstat","p")
- 
+  
   #go from long to wide format
   params <- params  %>%
     pivot_wider(names_from = Trait, values_from = c("SNPpcor_est", "SNPpcor_se", "Zstat", "p"))
+  }
 
   # Split the column names by "_", get the last element of each, and order the column names based on these
   ordered_cols <- names(params)[order(sapply(strsplit(names(params), "_"), function(x) tail(x, n = 1)))]
