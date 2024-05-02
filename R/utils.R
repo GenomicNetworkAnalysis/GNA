@@ -14,8 +14,16 @@
   A <- mat$A
   
   ### wls weight matrix from stage 2
-  sigma_inv <- solve(sigma)
-  S2.W <- 0.5 * t(D) %*% kronecker(sigma_inv, sigma_inv) %*% D
+  estimation <- Model_Results@estimator
+  
+  if(estimation == "ML"){
+    sigma_inv <- solve(sigma)
+    S2.W <- 0.5 * t(D) %*% kronecker(sigma_inv, sigma_inv) %*% D
+    }
+  
+  if(estimation == "DWLS"){
+    S2.W <- Model_Results@sample@WLS.W[[1]]
+    }
   
   ### Jacobian matrix of sigma in respect to theta (all model parameters) i.e "Delta" in genomic sem
   IminOinv <- solve(diag(ncol(omega)) - omega) #inverse of (identify matrix - omega)
