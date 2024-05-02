@@ -12,7 +12,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   
   #estimate saturated network parameters
   print("Estimating saturated network model.")
-  model_out <- .runGGM(covstruc,fix_omega="full",estimation,toler)
+  model_out <- .runGGM(covstruc,fix_omega="full",saturated=NULL,estimation,toler)
   model_results <- list(saturated=model_out)
   
   #simulations to estimate power for each partial rg
