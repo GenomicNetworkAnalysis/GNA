@@ -1,4 +1,4 @@
-.runGGM <- function(covstruc,fix_omega="full",saturated=NULL,toler=NULL) {
+.runGGM <- function(covstruc,fix_omega="full",saturated=NULL,estimation="ML",toler=NULL) {
   
   # read in V (sampling covariance) and S (covariance) matrices
   V_LD <- as.matrix(covstruc[[1]]) 
@@ -10,8 +10,15 @@
     diag(fix_omega) <- 0
   }
   
-  ### run the GGM 
-  model <- varcov( type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "nlminb")
+  ### run the GGM
+  if(estimation == "ML"){
+    model <- varcov(type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "ML", optimizer = "nlminb")
+    }
+  if(estimation == "DWLS"){
+    W <- diag(diag(solve(V_LD)),nrow(V_LD)) #diagonal weight matrix
+    model <- varcov(type = "ggm", covs = S_LD, omega = fix_omega, nobs = 200, covtype = "ML", estimator = "DWLS", WLS.W = W, optimizer = "nlminb")
+    }
+  
   Model_Results <- runmodel(model)
 
   ### get necessary model matrices / information
