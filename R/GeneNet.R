@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,graph_layout="mds",simruns=NULL,prunepower=FALSE,traits=NULL,toler=NULL){
+GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,estimation="ML",graph_layout="mds",simruns=NULL,prunepower=FALSE,traits=NULL,toler=NULL){
   
   time<-proc.time()
   
@@ -12,7 +12,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   
   #estimate saturated network parameters
   print("Estimating saturated network model.")
-  model_out <- .runGGM(covstruc,fix_omega="full",toler)
+  model_out <- .runGGM(covstruc,fix_omega="full",estimation,toler)
   model_results <- list(saturated=model_out)
   
   #simulations to estimate power for each partial rg
@@ -24,7 +24,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   #estimate base sparse network parameters (if fixed omega matrix provided)
   if(is.matrix(fix_omega)){
     print("Estimating base sparse network model.")
-    model_out <- .runGGM(covstruc,fix_omega,toler,saturated=model_results$saturated)
+    model_out <- .runGGM(covstruc,fix_omega,saturated=model_results$saturated,estimation,toler)
     model_results <- c(model_results, list(base=model_out))
   }
   
@@ -44,7 +44,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
       model_iterations <- list()
       iter <- 0
       repeat {
-        model_out <- .runGGM(covstruc,fix_omega=pruned_omega,toler,saturated=model_results$saturated)
+        model_out <- .runGGM(covstruc,fix_omega=pruned_omega,saturated=model_results$saturated,estimation,toler)
         model_iterations <- c(model_iterations, list(model_out))
         
         if (recursive){
