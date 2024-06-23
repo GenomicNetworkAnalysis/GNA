@@ -1,16 +1,42 @@
 .describeNet <- function(omega,graph_layout){
-
-  # network graph
-  ifelse(graph_layout == "mds",
-         layout <- mds(sim2diss(omega), type = "ordinal")$conf, #multidimensional scaling
-         layout <- graph_layout)
   
-  graph <- qgraph(omega, layout=layout, vsize = 7, threshold = 0, theme = "Borkulo")
+  ### NETWORK GRAPH
+  base_graph <- qgraph(omega, DoNotPlot = TRUE)
   
-  # centrality metrics
-  centr <- centralityTable(graph)
+  if (graph_layout == "spring" | graph_layout == "circle") {
+    layout <- graph_layout
+  } else if (graph_layout == "mds") {
+    layout <- MDSnet(base_graph)
+  } else if (graph_layout == "pca") {
+    layout <- PCAnet(base_graph)
+  } else if (graph_layout == "eigen") {
+    layout <- EIGENnet(base_graph)
+  } else {
+    layout <- "spring"
+    print(paste0("Graph layout '",graph_layout,"' is not supported. Use one of 'spring', 'circle', 'mds', 'pca' or 'eigen'.  Plotting the network using the default 'spring' layout"))
+  }
+      
+  graph <- qgraph(base_graph, layout = layout, vsize = 7, threshold = 0, theme = "Borkulo", DoNotPlot = FALSE)
+  
+  
+  ### BASIC LOCAL AND GLOBAL NETWORK METRICS
+  
+  ## Local
+  # centrality coefficients
+  centr <- centralityTable(omega)
   centr <- as.data.frame(reshape2::dcast(centr, node ~ measure, value.var = "value"))
-  colnames(centr)[1] <- "Trait"
   
-  return(list(graph=graph,centrality=centr))
+  # clustering coefficients
+  clust <- clusteringTable(omega, signed = TRUE)
+  clust <- as.data.frame(reshape2::dcast(clust, node ~ measure, value.var = "value"))
+  
+  local_metrics <- list(centr,clust)
+  names(local_metrics) <- c("centrality","clustering")
+  
+  ## Global
+  # smallwordness, average shortest path length, transitivity..
+  set.seed(123)
+  global_metrics <- as.list(smallworldness(omega))
+  
+  return(list(graph=graph,local_metrics=local_metrics,global_metrics=global_metrics))
 }
