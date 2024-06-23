@@ -36,7 +36,7 @@
   ## Global
   # smallwordness, average shortest path length, transitivity..
   set.seed(123)
-  global_metrics <- as.list(smallworldness(omega))
+  global_metrics <- as.list(smallworldness(graph))
   
   return(list(graph=graph,local_metrics=local_metrics,global_metrics=global_metrics))
 }
