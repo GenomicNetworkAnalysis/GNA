@@ -23,11 +23,11 @@
   
   ## Local
   # centrality coefficients
-  centr <- centralityTable(omega)
+  centr <- centralityTable(omega, standardized = FALSE)
   centr <- as.data.frame(reshape2::dcast(centr, node ~ measure, value.var = "value"))
   
   # clustering coefficients
-  clust <- clusteringTable(omega, signed = TRUE)
+  clust <- clusteringTable(omega, signed = TRUE, standardized = FALSE)
   clust <- as.data.frame(reshape2::dcast(clust, node ~ measure, value.var = "value"))
   
   local_metrics <- list(centr,clust)
@@ -35,8 +35,7 @@
   
   ## Global
   # smallwordness, average shortest path length, transitivity..
-  set.seed(123)
-  global_metrics <- as.list(smallworldness(graph))
+  global_metrics <- as.list(smallworldness(omega))
   
   return(list(graph=graph,local_metrics=local_metrics,global_metrics=global_metrics))
 }
