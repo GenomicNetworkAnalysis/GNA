@@ -69,6 +69,7 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
       model_results <- c(model_results, model_iterations)
     } else{
       print("Network model not re-estimated")
+      model_results <- c(model_results, list(sparse=list(omega=pruned_omega)))
     }
   }else{
     print("You have selected not to prune the edges in your network. Please ensure this is correct.")
