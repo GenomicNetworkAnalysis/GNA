@@ -1,4 +1,4 @@
 # GeneNets
-Package for genetic network analysis of GWAS summary statistics 
+Package for performing network analysis of genetic overlap derived from GWAS summary statistics. 
 
 ![](https://github.com/GeneNets/GeneNets/blob/main/figures/GeneNet.png)
