@@ -1,4 +1,4 @@
-GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,estimation="ML",graph_layout="mds",simruns=NULL,prunepower=FALSE,traits=NULL,toler=NULL){
+traitNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,estimation="ML",graph_layout="mds",traits=NULL,toler=NULL){
   
   time<-proc.time()
   
@@ -15,12 +15,6 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   model_out <- .runGGM(covstruc,fix_omega="full",saturated=NULL,estimation,toler)
   model_results <- list(saturated=model_out)
   
-  #simulations to estimate power for each partial rg
-  if(is.numeric(simruns)){
-    powerNet<-.simNet(covstruc,simruns,p.adjust,alpha)
-    model_results$saturated$parameters$power<-c(powerNet,rep(NA,ncol(covstruc$S_LD)))
-  }
-  
   #estimate base sparse network parameters (if fixed omega matrix provided)
   if(is.matrix(fix_omega)){
     print("Estimating base sparse network model.")
@@ -31,10 +25,6 @@ GeneNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.
   #network pruning and re-estimation
   #initial network pruning
   if(prune){
-    if(prunepower){
-      print(paste0("Pruning non-significant network edges (alpha = ",alpha,", p-value adjust = '",p.adjust,"') and edges with < 80% power in simulation"))
-      pruned_omega <- .pruneNet(model_out,p.adjust,alpha,prunepower)
-    }else{
       print(paste0("Pruning non-significant network edges (alpha = ",alpha,", p-value adjust = '",p.adjust,"')"))
       pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
     }
