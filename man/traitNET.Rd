@@ -27,7 +27,7 @@ traitNET(covstruc,
   \item{alpha}{Significance level to use for pruning. Default = 0.05}
   \item{reestimate}{Logical. Should network parameters be reestimated after pruning? Default = TRUE}
   \item{recursive}{Logical. Should the model be pruned and reestimated recursively? Default = TRUE}
-  \item{estimation}{P-value adjustment method to use to prune edges. Must be one of \code{p.adjust.methods}. Default = \code{"fdr"}}
+  \item{estimation}{The estimator to be used. Currently implemented is \code{"ML"} for maximum likelihood estimation. Default = \code{"ML"}}
   \item{graph_layout}{Layout of the graph. Must be one of \code{c("spring","circle","mds","pca","eigen")}. "circle" places all nodes in a single circle, "spring" gives a force directed layout, "mds" gives a multidimensional scaling based layout, "pca" gives a principal components based layout, and "eigen" gives an eigenmodel based layout [see Jones, Mair & McNally (2018)]. Default = \code{"mds"}}
   \item{traits}{Subset of trait names to include in the network. Default = NULL (all traits included)}
   \item{toler}{The tolerance to use for matrix inversion. Default = NULL}
