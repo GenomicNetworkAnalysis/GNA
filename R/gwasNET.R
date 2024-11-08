@@ -1,4 +1,4 @@
-gwasNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,parallel=TRUE,cores=NULL){
+gwasNET <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,parallel=TRUE,cores=NULL){
   
   time<-proc.time()
 
@@ -88,7 +88,7 @@ gwasNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
         }
       }
       
-     SNPrun   <- .gwasNet_main(i, cores=1, n_phenotypes, 1, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omegaFull,coords)
+     SNPrun   <- .gwasNET_main(i, cores=1, n_phenotypes, 1, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omegaFull,coords)
      if(i == 1){
        #create empty data.frame to store results
        SNPnet <- as.data.frame(matrix(NA,ncol=ncol(SNPrun),nrow=nrow(SNPs)))
@@ -133,15 +133,15 @@ gwasNet <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   if (Operating != "Windows") {
     SNPnet <- foreach(n = icount(int), .combine = 'rbind') %:%
       foreach (i=1:nrow(beta_SNP[[n]]), .combine='rbind', .packages = "psychonetrics") %dopar% 
-      .gwasNet_main(i, int, n_phenotypes, n, I_LD, V_LD, S_LD, varSNPSE2, SNPs[[n]], beta_SNP[[n]], SE_SNP[[n]], varSNP[[n]], TWAS, toler,fix_omegaFull,coords)
+      .gwasNET_main(i, int, n_phenotypes, n, I_LD, V_LD, S_LD, varSNPSE2, SNPs[[n]], beta_SNP[[n]], SE_SNP[[n]], varSNP[[n]], TWAS, toler,fix_omegaFull,coords)
   } else {
     #Util-functions have to be explicitly passed to the analysis function in PSOCK cluster
     utilfuncs <- list(); utilfuncs[[".get_V_SNP"]] <- .get_V_SNP; utilfuncs[[".get_Z_pre"]] <- .get_Z_pre; utilfuncs[[".get_V_full"]] <- .get_V_full; utilfuncs[[".sandwichSE"]] <- .sandwichSE
     
     SNPnet <- foreach(n = icount(int), .combine = 'rbind') %:%
       foreach (i=1:nrow(beta_SNP[[n]]), .combine='rbind', .packages = c("psychonetrics", "gdata"),
-               .export=c(".gwasNet_main")) %dopar% {
-       .gwasNet_main(i, int, n_phenotypes, n, I_LD, V_LD, S_LD,  varSNPSE2,SNPs[[n]], beta_SNP[[n]], SE_SNP[[n]], varSNP[[n]], TWAS, toler,fix_omegaFull,coords,utilfuncs)
+               .export=c(".gwasNET_main")) %dopar% {
+       .gwasNET_main(i, int, n_phenotypes, n, I_LD, V_LD, S_LD,  varSNPSE2,SNPs[[n]], beta_SNP[[n]], SE_SNP[[n]], varSNP[[n]], TWAS, toler,fix_omegaFull,coords,utilfuncs)
                }
   }
   
