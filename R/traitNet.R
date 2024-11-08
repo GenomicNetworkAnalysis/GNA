@@ -27,7 +27,7 @@ traitNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0
   if(prune){
       print(paste0("Pruning non-significant network edges (alpha = ",alpha,", p-value adjust = '",p.adjust,"')"))
       pruned_omega <- .pruneNet(model_out,p.adjust,alpha)
-    }
+    
     
     # restimate the network (recursively)
     if(reestimate){
