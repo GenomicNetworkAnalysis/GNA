@@ -1,4 +1,4 @@
-.GWASNet_main<-function(i, cores, k, n, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omega,coords,utilfuncs=NULL){
+.gwasNet_main<-function(i, cores, k, n, I_LD, V_LD, S_LD, varSNPSE2, SNPs, beta_SNP, SE_SNP, varSNP, TWAS, toler,fix_omega,coords,utilfuncs=NULL){
   
   # utilfuncs contains utility functions to enable this code to work on PSOC clusters (for Windows)
   if (!is.null(utilfuncs)) {
