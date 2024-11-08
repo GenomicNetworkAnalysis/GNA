@@ -1,4 +1,4 @@
-traitNet <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,estimation="ML",graph_layout="mds",traits=NULL,toler=NULL){
+traitNET <- function(covstruc,fix_omega="full",prune=TRUE,p.adjust="fdr",alpha=0.05,reestimate=TRUE,recursive=TRUE,estimation="ML",graph_layout="mds",traits=NULL,toler=NULL){
   
   time<-proc.time()
   
