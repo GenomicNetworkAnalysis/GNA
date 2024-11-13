@@ -1,4 +1,4 @@
-Package: GeneNets
+Package: GNA
 Type: Package
 Title: Network Analysis based on GWAS summary statistics
 Version: 0.0.1
