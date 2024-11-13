@@ -35,7 +35,7 @@ traitNET(covstruc,
 }
 
 \value{
-  The function outputs the network model results
+  The function outputs the network model results and the network graph
 }
 
 
