@@ -1,4 +1,0 @@
-Here you can find the neccesary reference files for running GNA, including:
-1) HapMap3 SNP list using for munging summary statistics
-2) LD Scores used for running LDSC
-3) 1000G SNP information used when running a Network GWAS
