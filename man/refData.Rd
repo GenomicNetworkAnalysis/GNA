@@ -17,10 +17,13 @@ refData(data,
 }
 
 \value{
-  - 'w_hm3.noMHC.snplist' (list of hm3 SNPs; used to munge summary statistics)
-  - 'eur_w_ld_chr/' or 'eas_w_ld_chr/' (directory of LD scores for European and East Asian ancestry, respectively; used for LDSC)
-  - 'reference.1000G.maf.0.005.eur.txt' or 'reference.1000G.maf.0.005.eas.txt' ('1000G' SNP reference data for European and East Asian ancestry, respectively; used if running a Network GWAS in GNA)
-  - '*.RDS' (genetic covariance matrices used to run the example analyses on the GNA wiki)
+- 'w_hm3.noMHC.snplist' (list of hm3 SNPs; used to munge summary statistics)
+
+- 'eur_w_ld_chr/' or 'eas_w_ld_chr/' (directory of LD scores for European and East Asian ancestry, respectively; used for LDSC)
+
+- 'reference.1000G.maf.0.005.eur.txt' or 'reference.1000G.maf.0.005.eas.txt' ('1000G' SNP reference data for European and East Asian ancestry, respectively; used if running a Network GWAS in GNA)
+
+- '*.RDS' (genetic covariance matrices used to run the example analyses on the GNA wiki)
 }
 
 
