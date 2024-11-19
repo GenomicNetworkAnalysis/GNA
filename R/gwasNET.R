@@ -16,7 +16,7 @@ gwasNET <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
     
     #Gene variance = GREML h2 of gene from FUMA
     varSNP <- SNPs$HSQ
-    SNPs <- SNPs[,1:3]
+    SNPs <- SNPs[,c("Gene","Panel","HSQ")]
   } else {
     SNPs$A1 <- as.character(SNPs$A1)
     SNPs$A2 <- as.character(SNPs$A2)
