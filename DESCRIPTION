@@ -7,4 +7,4 @@ Description: Later
 License: GPL-3.0
 Encoding: UTF-8
 LazyData: true
-Imports: lavaan,tidyverse,qgraph,reshape2,Matrix,rockchalk,smacof,psychonetrics,gdata,MASS,dplyr,tidyverse,doParallel,parallel,foreach,Rcpp,tidyr,iterators
+Imports: lavaan,tidyverse,qgraph,reshape2,Matrix,rockchalk,smacof,psychonetrics,gdata,MASS,dplyr,tidyverse,doParallel,parallel,foreach,Rcpp,R.utils,tidyr,iterators
