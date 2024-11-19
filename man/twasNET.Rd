@@ -5,7 +5,7 @@
 Function to estimate the association of individual genes and traits in a network. This function will run as many models as there are genes
 }
 \usage{
-twasNet(covstruc,
+twasNET(covstruc,
         genes,
         fix_omega="full",
         toler=NULL,
