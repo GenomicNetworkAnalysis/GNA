@@ -65,8 +65,10 @@ gwasNET <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
     ##add in omega_SNP as first row/column of the expanded omega matrix
     fix_omegaFull[1:(n_phenotypes+1),1] <- omega_SNP
     fix_omegaFull[1,1:(n_phenotypes+1)] <- t(omega_SNP)
+    print("Estimating a sparse network (some edges between traits are fixed to zero)")
   }else{
-    print("You have elected not to prune any edges among your traits. Please ensure this is correct")
+    fix_omegaFull = "full"
+    print("Estimating a saturated network (all edges between traits are estimated)")
   }
   
   if(TWAS){
