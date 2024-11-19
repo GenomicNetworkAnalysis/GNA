@@ -52,24 +52,25 @@ gwasNET <- function(covstruc,SNPs,fix_omega="full",toler=NULL,TWAS=FALSE,paralle
   
   # If fixed omega matrix, recode - edges fixed to zero = 0; edge free = 1 (other integers encode equality constraints)
   #then expand to include SNP effects
-  if (is.matrix(fix_omega)) {
-    fix_omega[fix_omega != 0] <- 1
-    diag(fix_omega) <- 0
-    
-    ##add the omega provided by user
-    fix_omegaFull[(2:(n_phenotypes+1)),(2:(n_phenotypes+1))] <- fix_omega
-    
-    #create the vector for the SNP portion of omega
-    omega_SNP<-c(0,rep(1,n_phenotypes))
-    
-    ##add in omega_SNP as first row/column of the expanded omega matrix
-    fix_omegaFull[1:(n_phenotypes+1),1] <- omega_SNP
-    fix_omegaFull[1,1:(n_phenotypes+1)] <- t(omega_SNP)
-    print("Estimating a sparse network (some edges between traits are fixed to zero)")
-  }else{
-    fix_omegaFull = "full"
-    print("Estimating a saturated network (all edges between traits are estimated)")
-  }
+ if (is.matrix(fix_omega)) {
+  fix_omega[fix_omega != 0] <- 1
+  diag(fix_omega) <- 0
+  
+  ##add the omega provided by user
+  fix_omegaFull[(2:(n_phenotypes+1)),(2:(n_phenotypes+1))] <- fix_omega
+  
+  #create the vector for the SNP portion of omega
+  omega_SNP<-c(0,rep(1,n_phenotypes))
+  
+  ##add in omega_SNP as first row/column of the expanded omega matrix
+  fix_omegaFull[1:(n_phenotypes+1),1] <- omega_SNP
+  fix_omegaFull[1,1:(n_phenotypes+1)] <- t(omega_SNP)
+  print("Estimating a sparse network (some edges between traits are fixed to zero)")
+}else{
+  fix_omegaFull[upper.tri(fix_omegaFull) | lower.tri(fix_omegaFull)] <- 1
+  diag(fix_omegaFull)<-0
+  print("Estimating a saturated network (all edges between traits are estimated)")
+}
   
   if(TWAS){
     print("Starting TWAS Network Estimation")
