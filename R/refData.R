@@ -5,7 +5,7 @@ refData <- function(data, dir = getwd()){
     # ld scores
     file.copy(system.file("extdata", paste0(data,"_w_ld_chr"), package="GNA"), dir, recursive=TRUE)
     # hm3 snplist
-    file.copy(system.file("extdata", "w_hm3.noMHC.snplist", package="GNA"), dir, recursive=TRUE)
+    file.copy(system.file("extdata", "w_hm3.snplist", package="GNA"), dir, recursive=TRUE)
     # 1000g ref
     file.copy(list.files(system.file("extdata", paste0("reference_1000g_",data), package="GNA"), full.names = T), dir, recursive=TRUE)
     lapply(list.files(dir, full.names = T, pattern = ".gz"), R.utils::gunzip) 
