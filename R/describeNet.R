@@ -55,7 +55,7 @@
   path <- NetworkToolbox::pathlengths(g_adj)$ASPL
   
   # mean average path length in 1000 random networks
-  path_rand <- sapply(1:B, function(i) {
+  path_rand <- sapply(1:1000, function(i) {
     set.seed(i)
     net <- NetworkToolbox::randnet(nodes=n_nodes, edges=n_edges)
     path_r <- NetworkToolbox::pathlengths(net)$ASPL
