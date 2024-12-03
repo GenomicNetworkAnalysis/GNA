@@ -6,9 +6,7 @@ Function to extract the reference files necessary to run GNA and/or the example 
 
 }
 \usage{
-refData(data,
-        dir=getwd(),
-        \dots)
+refData(data, dir=getwd())
 
 }
 \arguments{
@@ -23,7 +21,7 @@ refData(data,
 
 - 'reference.1000G.maf.0.005.eur.txt' or 'reference.1000G.maf.0.005.eas.txt' ('1000G' SNP reference data for European and East Asian ancestry, respectively; used if running a Network GWAS in GNA)
 
-- '*.RDS' (genetic covariance matrices used to run the example analyses on the GNA wiki)
+- '*.RDS' (genetic covariance matrices and SNP/gene data used to run the example analyses on the GNA wiki)
 }
 
 
