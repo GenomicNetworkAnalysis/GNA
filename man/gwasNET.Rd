@@ -5,7 +5,7 @@
 Function to estimate the association of individual SNPs and traits in a network. This function will run as many models as there are SNPs
 }
 \usage{
-gwasNet(covstruc,
+gwasNET(covstruc,
         SNPs,
         fix_omega="full",
         toler=NULL,
