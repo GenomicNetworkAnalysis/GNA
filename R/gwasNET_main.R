@@ -54,7 +54,7 @@
   if(exists("S_smooth") | exists("V_smooth")){
     SE_smooth <- matrix(0, ks, ks)
     SE_smooth[lower.tri(SE_smooth,diag=TRUE)]  <- sqrt(diag(V_Full))
-    Z_smooth <- (S_Fullrun/SE_smooth)[2:ks,1]
+    Z_smooth <- (S_Full/SE_smooth)[2:ks,1]
     Z_smooth <- max(abs(Z_smooth-Z_pre))
   }else{
     Z_smooth <- 0
