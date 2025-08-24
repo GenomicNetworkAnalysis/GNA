@@ -25,7 +25,7 @@
   centr <- as.data.frame(reshape2::dcast(centr, node ~ measure, value.var = "value"))
   
   # clustering coefficients
-  clust <- clusteringTable(omega, signed = TRUE, standardized = FALSE)
+  clust <- clusteringTable(omega, signed = FALSE, standardized = FALSE)
   clust <- as.data.frame(reshape2::dcast(clust, node ~ measure, value.var = "value"))
   
   local_metrics <- list(centr,clust)
